@@ -1,47 +1,76 @@
-name: Build Snake Game
-
-on:
-  push:
-    branches:
-      - main  # Trigger on pushes to the main branch
-  pull_request:
-    branches:
-      - main  # Trigger on pull requests to the main branch
-
 jobs:
-  build:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
-
+  build-linux:
+    runs-on: ubuntu-latest
     steps:
-      # Check out the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up CMake
       - name: Set up CMake
         uses: actions/setup-cmake@v3
 
-      # Install dependencies (SDL2 and SDL2_ttf)
       - name: Install dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libsdl2-dev libsdl2-ttf-dev
 
-      # Create a build directory
       - name: Create build directory
         run: mkdir build
 
-      # Configure the project with CMake
       - name: Configure CMake
         working-directory: ./build
         run: cmake ..
 
-      # Build the project
       - name: Build project
         working-directory: ./build
         run: cmake --build .
 
-      # (Optional) Run the executable to verify it works
-      - name: Run executable
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up CMake
+        uses: actions/setup-cmake@v3
+
+      - name: Install dependencies
+        run: |
+          choco install mingw -y
+          choco install sdl2 -y
+          choco install sdl2_ttf -y
+
+      - name: Create build directory
+        run: mkdir build
+
+      - name: Configure CMake
         working-directory: ./build
-        run: ./SnakeGame
+        run: cmake ..
+
+      - name: Build project
+        working-directory: ./build
+        run: cmake --build .
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up CMake
+        uses: actions/setup-cmake@v3
+
+      - name: Install dependencies
+        run: |
+          brew install sdl2
+          brew install sdl2_ttf
+
+      - name: Create build directory
+        run: mkdir build
+
+      - name: Configure CMake
+        working-directory: ./build
+        run: cmake ..
+
+      - name: Build project
+        working-directory: ./build
+        run: cmake --build .
