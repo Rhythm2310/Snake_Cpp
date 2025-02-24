@@ -1,4 +1,4 @@
-name: Build Project
+name: Build Linux Project
 
 on: [push, pull_request]
 
@@ -13,47 +13,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libsdl2-dev libsdl2-ttf-dev cmake g++
-
-      - name: Create build directory
-        run: mkdir -p build
-
-      - name: Configure CMake
-        run: cmake -B build -S .
-
-      - name: Build project
-        run: cmake --build build
-
-  build-windows:
-    runs-on: windows-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        shell: cmd
-        run: |
-          choco install mingw -y
-          choco install sdl2 -y
-          choco install sdl2_ttf -y
-
-      - name: Create build directory
-        run: mkdir build
-
-      - name: Configure CMake
-        run: cmake -B build -S . -G "MinGW Makefiles"
-
-      - name: Build project
-        run: cmake --build build
-
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Install dependencies
-        run: |
-          brew install sdl2 sdl2_ttf cmake
 
       - name: Create build directory
         run: mkdir -p build
